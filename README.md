@@ -1,9 +1,13 @@
 
+### uRAD Hail Disdrometer
+
 #### Prototype Python software for operating the uRAD radar as a hail disdrometer
 
 https://urad.es/
 
 Designed to be run on a Raspberry pi 4 with the urad connected via USB. The Raspberry pi 4 can also be confiured to act as a wireless hotspot, allowing remote access. A RTC should ideally be used and the UTC+0 timezone configured.
+
+### Options
 
 The main script is the `urad_capture.py`.
 The following options are implemented:
@@ -28,9 +32,23 @@ Here the user defines a string which is used in the file naming
 
 Here the user defined the data output folder as a string. This folder will be created if it does not exist
 
+### How to run
+
 An example of how to save results and print results follows:
 
 `python3 urad_capture.py ---results --disp --prefix="urad" --data_path="/my/home/folder"`
 
 The signal processing library provided by urad is contained in `uRAD_USB_SDK11_Ns400doppler.py`
+
+### Data Structure
+
+Results data contains the columns
+seconds_since_start, velocity (m/s), SNG (dB)
+
+IQ data rows consist of
+seconds_since_start, sequence of I, sequence of Q
+
+### Authors
+
+uRAD team (Victor Torres, Diego Gaston), Joshua Soderholm, Julian Brimelow 
 

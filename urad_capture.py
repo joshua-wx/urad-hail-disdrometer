@@ -96,7 +96,7 @@ def main():
             for index in range(len(Q)):
                 IQ_string += '%d ' % Q[index]
             #write out
-            file_iq.write(IQ_string + '%1.3f\n' % ts)
+            file_iq.write('%1.3f' % (ts) + IQ_string + '\n')
             #iterate
             iterations += 1
             #write out sampling rate
@@ -106,7 +106,7 @@ def main():
         if save_results:
             # If number of detected targets is greater than 0 prints an empty line for a smarter output
             if (NtarDetected > 0):
-                file_results.write('%s%1.3f\n' % (results_str, t_i))
+                file_results.write('%s\n' % (results_str))
                 print(" ")
 
         if t_i-t_0 > file_max_duration:
