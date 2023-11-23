@@ -1,11 +1,19 @@
-import uRAD_USB_SDK11_Ns400doppler as uRAD_USB_SDK11		# import uRAD libray
+import os
 import serial
-from time import time, sleep
-from datetime import datetime
 import argparse
+from time import time
+from datetime import datetime
+
+import uRAD_USB_SDK11_Ns400doppler as uRAD_USB_SDK11		# import uRAD libray
 
 def main():
     
+    #create directory
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+        if not os.path.exists(data_path):
+            raise Exception(f'Failed to create data directory {data_path}')
+
     # Serial Port configuration
     ser = serial.Serial()
     ser.port = '/dev/ttyACM0'
@@ -158,11 +166,17 @@ if __name__ == '__main__':
         default='urad',
         type=str,
         help='file prefix')
+    parser.add_argument(
+        '--data_path',
+        default='/home/hailpi/urad_data',
+        type=str,
+        help='data folder')
     
     args = parser.parse_args()
     save_iq       = args.iq
     save_results  = args.results
     print_results = args.disp
     file_prefix   = args.prefix
+    data_path   = args.data_path
 
     main()
