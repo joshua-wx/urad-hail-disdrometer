@@ -51,13 +51,13 @@ def main():
         closeProgram()
 
     #init output files
-    start_str = datetime.strftime(datetime.now(),'%Y%m%d_%H%M%S')
+    start_str = datetime.strftime(datetime.now(),'%Y%m%d%H%M%S')
     t_0 = time()
     if save_iq:
-        file_iq = open(f'{start_str}_{file_prefix}_iq.txt', 'w')
+        file_iq = open(f'{data_path}/{start_str}_{file_prefix}_iq.txt', 'w')
         iterations = 0
     if save_results:
-        file_results = open(f'{start_str}_{file_prefix}_processed.txt', 'w')
+        file_results = open(f'{data_path}/{start_str}_{file_prefix}_processed.txt', 'w')
     # infinite detection loop
     while True:
 
@@ -111,15 +111,15 @@ def main():
 
         if t_i-t_0 > file_max_duration:
             #new files
-            start_str = datetime.strftime(datetime.now(),'%Y%m%d_%H%M%S')
+            start_str = datetime.strftime(datetime.now(),'%Y%m%d%H%M%S')
             t_0 = time()
             if save_iq:
                 file_iq.close()
-                file_iq = open(f'{start_str}_{file_prefix}_iq.txt', 'w')
+                file_iq = open(f'{data_path}/{start_str}_{file_prefix}_iq.txt', 'w')
                 iterations = 0
             if save_results:
                 file_results.close()
-                file_results = open(f'{start_str}_{file_prefix}_processed.txt', 'w')
+                file_results = open(f'{data_path}/{start_str}_{file_prefix}_processed.txt', 'w')
             
 
 
@@ -133,15 +133,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = parser_description)
     parser.add_argument(
         '--iq',
-        default=False,
         help='flag to save IQ data', action=argparse.BooleanOptionalAction)
     parser.add_argument(
         '--results',
-        default=True,
         help='flag to save results', action=argparse.BooleanOptionalAction)
     parser.add_argument(
         '--disp',
-        default=True,
         help='flag to display live results data', action=argparse.BooleanOptionalAction)
     parser.add_argument(
         '--prefix',
