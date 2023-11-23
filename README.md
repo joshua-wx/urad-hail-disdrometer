@@ -52,3 +52,7 @@ seconds_since_start, sequence of I, sequence of Q
 
 uRAD team (Victor Torres, Diego Gaston), Joshua Soderholm, Julian Brimelow 
 
+### Evironment
+
+Raspberry Pi OS (64 Bit). Miniforge (ARM64). Dependency: pyserial (installed via conda)
+
