@@ -62,33 +62,17 @@ def main():
     while True:
 
         # target detection request
-        return_code, results, raw_results = uRAD_USB_SDK11.detection(ser)
+        return_code, results, iq = uRAD_USB_SDK11.detection(ser)
         if (return_code != 0):
             closeProgram()
 
         #take timestamp
         t_i = time()
-
-        # Extract results from outputs
-        NtarDetected = results[0]
-        velocity = results[2]
-        SNR = results[3]
-        I = raw_results[0]
-        Q = raw_results[1]
         ts = t_i-t_0
 
-        #create string
-        results_str = ''
-        # Iterate through desired targets
-        for i in range(NtarDetected):
-            # If SNR is big enough
-            if (SNR[i] > 0):
-                results_str += '%1.3f %1.2f %1.1f ' % (ts, velocity[i], SNR[i])
-                    # Prints target information
-                if print_results:
-                    print("Target: %d, Velocity: %1.1f m/s, SNR: %1.1f dB" % (i+1, velocity[i], SNR[i]))
-
-        if save_iq:        
+        if save_iq:
+            I = iq[0]
+            Q = iq[1]
             #create IQ string
             IQ_string = ''
             for index in range(len(I)):
@@ -103,11 +87,26 @@ def main():
             if (iterations > 100):
                 print('Fs %1.2f Hz' % (iterations/(t_i-t_0)))
 
+        if print_results or save_results:
+            NtarDetected = results[0]
+            velocity = results[2]
+            SNR = results[3]
+            #create results string
+            results_str = ''
+            # Iterate through desired targets
+            for i in range(NtarDetected):
+                # If SNR is big enough
+                if (SNR[i] > 0):
+                    results_str += '%1.3f %1.2f %1.1f ' % (ts, velocity[i], SNR[i])
+        
+        # Prints target information
+        if print_results:
+            print("Target: %d, Velocity: %1.1f m/s, SNR: %1.1f dB\n" % (i+1, velocity[i], SNR[i]))
+        
         if save_results:
             # If number of detected targets is greater than 0 prints an empty line for a smarter output
             if (NtarDetected > 0):
-                file_results.write('%s\n' % (results_str))
-                print(" ")
+                file_results.write('%s\n' % (results_str))  
 
         if t_i-t_0 > file_max_duration:
             #new files
@@ -119,7 +118,7 @@ def main():
                 iterations = 0
             if save_results:
                 file_results.close()
-                file_results = open(f'{data_path}/{start_str}_{file_prefix}_processed.txt', 'w')
+                file_results = open(f'{data_path}/{start_str}_{file_prefix}_results.txt', 'w')
             
 
 
@@ -147,7 +146,7 @@ if __name__ == '__main__':
         help='file prefix')
     parser.add_argument(
         '--data_path',
-        default='/home/hailpi/urad_data',
+        default='/home/pihail/urad_data',
         type=str,
         help='data folder')
     
@@ -158,16 +157,22 @@ if __name__ == '__main__':
     file_prefix   = args.prefix
     data_path   = args.data_path
 
+    if save_iq and save_results:
+        raise Exception('Cannot both save IQ data and save results, please select one')
+    
+    if save_iq and print_results:
+        raise Exception('Cannot both save IQ data and print results, please select one')    
+
     # input parameters
     mode = 1					# doppler mode
     f0 = 125					# output continuous frequency 24.125 GHz
     BW = 240					# don't apply in doppler mode (mode = 1)
-    Ns = 400					# 200 samples
+    Ns = 400					# samples
     Ntar = 3					# 3 target of interest
     Vmax = 75					# searching along the full velocity range
     MTI = 0						# MTI mode disable because we want information of static and moving targets
     Mth = 0						# parameter not used because "movement" is not requested
-    Alpha = 10					# signal has to be 10 dB higher than its surrounding
+    Alpha = 20					# signal has to be Alpha dB higher than its surrounding
     distance_true = False 		# mode 1 does not provide distance information
     velocity_true = False		# request velocity information
     SNR_true = False 			# Signal-to-Noise-Ratio information requested
@@ -184,4 +189,7 @@ if __name__ == '__main__':
         velocity_true = True		# request velocity information
         SNR_true = True 			# Signal-to-Noise-Ratio information requested
 
+
+ 
+    
     main()
