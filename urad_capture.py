@@ -128,24 +128,6 @@ if __name__ == '__main__':
     Global vars
     """
 
-    # input parameters
-    mode = 1					# doppler mode
-    f0 = 125					# output continuous frequency 24.125 GHz
-    BW = 240					# don't apply in doppler mode (mode = 1)
-    Ns = 400					# 200 samples
-    Ntar = 3					# 3 target of interest
-    Vmax = 75					# searching along the full velocity range
-    MTI = 0						# MTI mode disable because we want information of static and moving targets
-    Mth = 0						# parameter not used because "movement" is not requested
-    Alpha = 20					# signal has to be 20 dB higher than its surrounding
-    distance_true = False 		# mode 1 does not provide distance information
-    velocity_true = True		# request velocity information
-    SNR_true = True 			# Signal-to-Noise-Ratio information requested
-    I_true = False 				# In-Phase Component (RAW data) not requested
-    Q_true = False 				# Quadrature Component (RAW data) not requested
-    movement_true = False 		# not interested in boolean movement detection
-    file_max_duration = 300     # maximum duration of a file in seconds
-
     # Parse arguments
     parser_description = "urad capture"
     parser = argparse.ArgumentParser(description = parser_description)
@@ -178,5 +160,31 @@ if __name__ == '__main__':
     print_results = args.disp
     file_prefix   = args.prefix
     data_path   = args.data_path
+
+    # input parameters
+    mode = 1					# doppler mode
+    f0 = 125					# output continuous frequency 24.125 GHz
+    BW = 240					# don't apply in doppler mode (mode = 1)
+    Ns = 400					# 200 samples
+    Ntar = 3					# 3 target of interest
+    Vmax = 75					# searching along the full velocity range
+    MTI = 0						# MTI mode disable because we want information of static and moving targets
+    Mth = 0						# parameter not used because "movement" is not requested
+    Alpha = 10					# signal has to be 10 dB higher than its surrounding
+    distance_true = False 		# mode 1 does not provide distance information
+    velocity_true = False		# request velocity information
+    SNR_true = False 			# Signal-to-Noise-Ratio information requested
+    I_true = False 				# In-Phase Component (RAW data) not requested
+    Q_true = False 				# Quadrature Component (RAW data) not requested
+    movement_true = False 		# not interested in boolean movement detection
+    file_max_duration = 300     # maximum duration of a file in seconds
+
+    if save_iq:
+        I_true = True 				# In-Phase Component (RAW data) requested
+        Q_true = True 				# Quadrature Component (RAW data) requested        
+
+    if save_results or print_results:
+        velocity_true = True		# request velocity information
+        SNR_true = True 			# Signal-to-Noise-Ratio information requested
 
     main()
