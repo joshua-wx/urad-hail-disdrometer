@@ -54,5 +54,7 @@ uRAD team (Victor Torres, Diego Gaston), Joshua Soderholm, Julian Brimelow
 
 ### Evironment
 
-Raspberry Pi OS (64 Bit). Miniforge (ARM64). Dependency: pyserial (installed via conda)
-
+Raspberry Pi OS (64 Bit).
+Miniforge (ARM64) -> use to create an env for this software.
+Dependency: pyserial (installed via conda)
+Enable RTC: first enable I2C from raspi-config, https://forums.raspberrypi.com/viewtopic.php?t=334986, write system time to hwclock using hwclock -w
